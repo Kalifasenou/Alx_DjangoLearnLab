@@ -1,12 +1,12 @@
 # Commande Python :
 from bookshelf.models import Book
 # Récupérer le livre à modifier
-book_to_update = Book.objects.get(title="1984")
+book = Book.objects.get(title="1984")
 # Modifier son titre pour 
-book_to_update.title = "Nineteen Eighty-Four"
+book.title = "Nineteen Eighty-Four"
 # Sauvegarder les modifications dans la base de données
-book_to_update.save()
-print(book_to_update.title)
+book.save()
+print(book.title)
 
 
 # Output:
