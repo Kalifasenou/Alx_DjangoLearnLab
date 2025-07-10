@@ -1,7 +1,7 @@
 # Commande Python :
 from bookshelf.models import Book
 # Récupérer le livre à supprimer par son titre mis à jour
-book_to_delete = Book.objects.get(title="Sous l'orage (roman)")
+book_to_delete = Book.objects.get(title="Nineteen Eighty-Four")
 # Supprimer l'instance du livre de la base de données
 book_to_delete.delete()
 
