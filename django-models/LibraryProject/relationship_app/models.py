@@ -3,6 +3,7 @@ from django.db import models
 # Modèle Auteur
 class Author(models.Model):
     name = models.CharField(max_length=100)
+    
 
     def __str__(self):
         return self.name
@@ -24,6 +25,9 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     publication_year = models.IntegerField()
     authors = models.ManyToManyField('Author', through='BookAuthor')
+    author = models.ForeignKey('Author', on_delete=models.CASCADE)
+    #books_by_author = Book.objects.filter(authors=author)
+
 
     def __str__(self):
         return self.title
@@ -31,15 +35,17 @@ class Book(models.Model):
 # Modèle Bibliothèque
 class Library(models.Model):
     name = models.CharField(max_length=100)
-    location = models.CharField(max_length=200)
-    books = models.ManyToManyField(Book, related_name='libraries')
+    location = models.CharField(max_length=100)
+    books = models.ManyToManyField(Book)
+
 
     def __str__(self):
         return self.name
 
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
-    library = models.ForeignKey(Library, on_delete=models.CASCADE)
+    library = models.OneToOneField(Library, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.name

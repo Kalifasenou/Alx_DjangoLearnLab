@@ -1,8 +1,14 @@
 import os
+import sys
+
+# Ajouter le dossier contenant manage.py au chemin système
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
+
 import django
 
 # Initialisation de Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'relationship_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LibraryProject.settings')
 django.setup()
 
 
@@ -47,3 +53,24 @@ if __name__ == "__main__":
     get_books_by_author("Victor Hugo")
     get_books_in_library("Bibliothèque Centrale")
     get_librarian_of_library("Bibliothèque Centrale")
+
+
+author = Author.objects.filter(name="Victor Hugo").first()
+if author:
+    books = Book.objects.filter(author=author)
+    for book in books:
+        print(book.title)
+
+
+library = Library.objects.filter(name="Bibliothèque Centrale").first()
+if library:
+    for book in library.books.all():
+        print(f"{book.title} by {book.author.name}")
+
+library = Library.objects.filter(name="Bibliothèque Centrale").first()
+if library:
+    try:
+        librarian = library.librarian  # car OneToOneField dans Librarian vers Library
+        print(f"Le bibliothécaire de {library.name} est {librarian.name}")
+    except Librarian.DoesNotExist:
+        print("Aucun bibliothécaire trouvé.")
