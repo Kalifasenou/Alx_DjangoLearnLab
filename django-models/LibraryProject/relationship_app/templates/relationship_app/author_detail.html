@@ -1,0 +1,23 @@
+<h1>{{ object.name }}</h1>
+<p>{{ object.bio }}</p>
+
+<h2>Livres écrits par cet auteur :</h2>
+<ul>
+    {% for book in object.book_set.all %}
+        <li><a href="{% url 'book-detail' book.pk %}">{{ book.title }}</a></li>
+    {% empty %}
+        <li>Aucun livre disponible.</li>
+    {% endfor %}
+</ul>
+
+<h2>Livres & contributions :</h2>
+<ul>
+    {% for book_author in object.bookauthor_set.all %}
+        <li>
+            Livre : <a href="{% url 'book-detail' book_author.book.pk %}">{{ book_author.book.title }}</a>
+            {% if book_author.contribution %}
+                - Contribution : {{ book_author.contribution }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
