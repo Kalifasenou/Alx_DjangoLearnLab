@@ -16,4 +16,26 @@ urlpatterns = [
     path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'),
 
     path('books/add/', views.BookCreateView.as_view(), name='book-add'),
+
+    # Authentification
+    path('login/', views.CustomLoginView.as_view(), name='login'),
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+    path('register/', views.RegisterView.as_view(), name='register'),
+
+
+    path('admin-dashboard/', views.admin_view, name='admin-dashboard'),
+    path('librarian-dashboard/', views.librarian_view, name='librarian-dashboard'),
+    path('member-dashboard/', views.member_view, name='member-dashboard'),
+
+
+    path('admin-dashboard/', views.admin_view, name='admin-dashboard'),
+    path('librarian-dashboard/', views.librarian_view, name='librarian-dashboard'),
+    path('member-dashboard/', views.member_view, name='member-dashboard'),
+
+
+    path('books/add/', views.BookCreateView.as_view(), name='book-add'), # Déjà là, mais avec permission
+    path('books/<int:pk>/edit/', views.BookUpdateView.as_view(), name='book-edit'), # Nouvelle URL
+    path('books/<int:pk>/delete/', views.BookDeleteView.as_view(), name='book-delete'), # Nouvelle URL
+
+
 ]

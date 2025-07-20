@@ -1,0 +1,25 @@
+{# relationship_app/templates/relationship_app/library_detail.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Détails de la bibliothèque: {{ object.name }}</title>
+</head>
+<body>
+    <h1>Bibliothèque: {{ object.name }}</h1>
+    <p>Localisation: {{ object.location }}</p>
+    <h2>Livres dans cette bibliothèque:</h2>
+    <ul>
+        {% for book in object.books.all %}
+            <li><a href="{% url 'book-detail' book.pk %}">{{ book.title }}</a></li>
+        {% empty %}
+            <li>Aucun livre dans cette bibliothèque.</li>
+        {% endfor %}
+    </ul>
+    <h2>Bibliothécaire:</h2>
+    {% if object.librarian %}
+        <p>{{ object.librarian.name }}</p>
+    {% else %}
+        <p>Aucun bibliothécaire assigné.</p>
+    {% endif %}
+</body>
+</html>

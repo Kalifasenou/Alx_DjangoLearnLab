@@ -1,0 +1,15 @@
+{# relationship_app/templates/relationship_app/library_list.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des bibliothèques</title>
+</head>
+<body>
+    <h1>Bibliothèques disponibles</h1>
+    <ul>
+        {% for library in object_list %}
+            <li><a href="{% url 'library-detail' library.pk %}">{{ library.name }}</a> ({{ library.location }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

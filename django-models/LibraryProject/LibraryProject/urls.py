@@ -24,6 +24,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    # path('', views.home, name='home'),
     path('', include('relationship_app.urls')),
-    #path('books/add/', views.BookCreateView.as_view(), name='book-add'),
-
 ]
