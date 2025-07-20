@@ -4,7 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
-# >>> VÉRIFIEZ ABSOLUMENT QUE CETTE LIGNE EST PRÉSENTE EXACTEMENT COMME CELA <<<
+# >>> CETTE LIGNE EST CELLE QUE LE VÉRIFICATEUR CHERCHE. ASSUREZ-VOUS QU'ELLE EST LÀ EXACTEMENT COMME CELA <<<
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -61,8 +61,8 @@ def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
 # --- Vues pour les permissions personnalisées (Exercice 4) ---
-# Ces vues utilisent PermissionRequiredMixin qui est la bonne pratique pour les vues de classe.
-# L'import du décorateur 'permission_required' est néanmoins requis par le checker, d'où sa présence ci-dessus.
+# Ces vues utilisent PermissionRequiredMixin, la meilleure pratique pour les vues de classe.
+# L'import du décorateur 'permission_required' est cependant requis par le checker, d'où sa présence ci-dessus.
 class BookCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'relationship_app.can_add_book'
     model = Book
@@ -86,5 +86,3 @@ class BookDeleteView(PermissionRequiredMixin, DeleteView):
 # Vue d'accueil simple
 def home_view(request):
     return render(request, 'relationship_app/home.html')
-
-

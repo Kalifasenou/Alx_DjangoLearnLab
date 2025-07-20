@@ -11,7 +11,6 @@ urlpatterns = [
 
     # --- URLs de l'Exercice 2 (Authentification) ---
     path('login/', auth_views.LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    # Assurez-vous que template_name est bien là pour LogoutView également
     path('logout/', auth_views.LogoutView.as_view(template_name='relationship_app/logout.html', next_page=reverse_lazy('login')), name='logout'),
     path('register/', views.register, name='register'),
 

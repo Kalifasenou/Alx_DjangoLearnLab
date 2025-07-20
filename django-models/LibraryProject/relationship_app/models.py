@@ -12,7 +12,7 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    publication_year = models.IntegerField(null=True, blank=True) # Ajouté pour correspondre au template
+    publication_year = models.IntegerField(null=True, blank=True)
 
     class Meta:
         permissions = [
@@ -48,8 +48,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile ({self.role})"
 
-# --- Signaux pour UserProfile (Assurez-vous qu'ils sont bien dans models.py ou signals.py et importés) ---
-# Si vous avez un fichier signals.py, déplacez ces deux fonctions là-bas et importez signals.py dans apps.py
+# --- Signaux pour UserProfile (Si vous avez un fichier signals.py, placez-les là-bas) ---
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -57,8 +56,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    # La ligne suivante peut causer une erreur si userprofile n'existe pas encore
-    # C'est pourquoi create_user_profile est important pour le "created" = True
-    # Assurez-vous que instance.userprofile existe avant d'appeler save()
     if hasattr(instance, 'userprofile'):
         instance.userprofile.save()
