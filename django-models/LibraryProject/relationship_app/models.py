@@ -24,11 +24,11 @@ class BookAuthor(models.Model):
 # Modèle Livre
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    publication_year = models.IntegerField()
-    authors = models.ManyToManyField(Author, through='BookAuthor')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    # Assurez-vous d'avoir publication_year si vos templates le demandent
+    publication_year = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        #  permissions
         permissions = [
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
