@@ -1,21 +1,21 @@
 # relationship_app/urls.py
 from django.urls import path
 from . import views
-from .views import list_books 
+# *** CORRECTION ICI *** : Importez les vues d'authentification directement de Django
 from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy # Assurez-vous d'importer reverse_lazy ici aussi si vous l'utilisez pour next_page
 
 urlpatterns = [
-    # Vue d'accueil (si vous en avez une)
-    path('', views.home_view, name='home'), 
-
-    # --- URLs de l'Exercice 1 ---
-    path('books/', list_books, name='book-list'), 
-    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'), 
+    path('', views.home_view, name='home'),
+    path('books/', views.list_books, name='book-list'),
+    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'),
 
     # --- URLs de l'Exercice 2 (Authentification) ---
-    path('login/', views.CustomLoginView.as_view(), name='login'),
-    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
-    path('register/', views.register, name='register'),
+    # *** CORRECTION ICI *** : Utilisation directe des vues d'authentification de Django
+    path('login/', auth_views.LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
+    # Pour LogoutView, next_page peut être défini directement ou via settings.LOGOUT_REDIRECT_URL
+    path('logout/', auth_views.LogoutView.as_view(next_page=reverse_lazy('login')), name='logout'),
+    path('register/', views.register, name='register'), # La vue register reste une fonction personnalisée
 
     # --- URLs de l'Exercice 3 (Contrôle d'accès basé sur les rôles) ---
     path('admin-dashboard/', views.admin_view, name='admin-dashboard'),
