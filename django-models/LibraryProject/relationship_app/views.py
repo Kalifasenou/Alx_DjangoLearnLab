@@ -1,12 +1,11 @@
-# relationship_app/views.py
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView
+# *** AJUSTEMENT ICI *** : LoginView et LogoutView ne sont plus importées car elles sont utilisées directement dans urls.py
+# from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
-# *** CORRECTION ICI *** : Ajoutez l'importation de 'login'
-from django.contrib.auth import login # <-- NOUVEL IMPORT NÉCESSAIRE
+# from django.contrib.auth import login # Cet import n'est pas strictement nécessaire si 'login' n'est pas appelé
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -14,13 +13,10 @@ from .models import Author, Book, Library, Librarian, UserProfile
 
 
 # --- Vues de l'Exercice 1 ---
-
-# Vue basée sur une fonction pour lister tous les livres
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Vue basée sur une classe pour afficher les détails d'une bibliothèque
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
@@ -28,20 +24,23 @@ class LibraryDetailView(DetailView):
 
 
 # --- Vues de l'Exercice 2 (Authentification) ---
-class CustomLoginView(LoginView):
-    template_name = 'relationship_app/login.html'
-    def get_success_url(self):
-        return reverse_lazy('home')
+# *** AJUSTEMENT ICI *** : CustomLoginView et CustomLogoutView peuvent être supprimées ou commentées
+# car urls.py utilise directement les vues de Django.
+# Si vous aviez des logiques spécifiques DANS ces vues, il faudrait les migrer,
+# mais pour les besoins de l'exercice, elles sont probablement vides ou gérées par défaut.
+# class CustomLoginView(LoginView):
+#     template_name = 'relationship_app/login.html'
+#     def get_success_url(self):
+#         return reverse_lazy('home')
 
-class CustomLogoutView(LogoutView):
-    next_page = reverse_lazy('login')
+# class CustomLogoutView(LogoutView):
+#     next_page = reverse_lazy('login')
 
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Optionnel: loguer l'utilisateur directement après l'inscription
             # login(request, user) # Décommentez si vous voulez que l'utilisateur soit connecté immédiatement
             return redirect('login')
     else:
