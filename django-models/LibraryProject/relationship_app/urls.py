@@ -1,15 +1,16 @@
 # relationship_app/urls.py
 from django.urls import path
-from . import views # Importez vos vues
-from django.contrib.auth import views as auth_views # Pour les vues d'authentification intégrées
+from . import views
+from .views import list_books 
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # Vue d'accueil (si vous en avez une)
-    path('', views.home_view, name='home'), # Assurez-vous que 'home_view' existe dans views.py
+    path('', views.home_view, name='home'), 
 
     # --- URLs de l'Exercice 1 ---
-    path('books/', views.list_books, name='book-list'), # Vue fonctionnelle
-    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'), # Vue de classe
+    path('books/', list_books, name='book-list'), 
+    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'), 
 
     # --- URLs de l'Exercice 2 (Authentification) ---
     path('login/', views.CustomLoginView.as_view(), name='login'),
