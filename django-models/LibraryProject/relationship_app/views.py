@@ -6,7 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from .models import Author, Book, Library, Librarian, UserProfile
+from .models import Author
+from .models import Book
+from .models import Library
+from .models import Librarian
+from .models import UserProfile
 
 
 # --- Vues de l'Exercice 1 ---
