@@ -1,19 +1,16 @@
 # relationship_app/views.py
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-# *** CORRECTION ICI *** : Importez DetailView spécifiquement comme demandé par le checker
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
+# *** CORRECTION ICI *** : Ajoutez l'importation de 'login'
+from django.contrib.auth import login # <-- NOUVEL IMPORT NÉCESSAIRE
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from .models import Author
-from .models import Book
-from .models import Library
-from .models import Librarian
-
+from .models import Author, Book, Library, Librarian, UserProfile
 
 
 # --- Vues de l'Exercice 1 ---
@@ -44,6 +41,8 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Optionnel: loguer l'utilisateur directement après l'inscription
+            # login(request, user) # Décommentez si vous voulez que l'utilisateur soit connecté immédiatement
             return redirect('login')
     else:
         form = UserCreationForm()
