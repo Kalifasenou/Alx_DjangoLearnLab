@@ -12,6 +12,8 @@ from django.shortcuts import redirect
 
 from django.contrib.auth.mixins import PermissionRequiredMixin 
 
+from django.contrib.auth import login
+
 
 
 
@@ -22,9 +24,10 @@ from .models import Book
 def home(request):
     return HttpResponse("Bienvenue dans la bibliothèque !")
 
-def book_list(request):
+def list_book
+(request):
     books = Book.objects.all() # 
-    return render(request, 'relationship_app/book_list.html', {'books': books}) # 
+    return render(request, 'relationship_app/list_book.html', {'books': books}) # 
 
 
 # Listes
@@ -34,7 +37,7 @@ class AuthorListView(ListView):
 
 class BookListView(ListView):
     model = Book
-    template_name = 'relationship_app/book_list.html'
+    template_name = 'relationship_app/list_book.html'
 
 class LibraryListView(ListView):
     model = Library
