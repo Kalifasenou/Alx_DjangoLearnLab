@@ -1,41 +1,28 @@
+# relationship_app/urls.py
 from django.urls import path
-from . import views
-#from relationship_app.views import BookCreateView 
+from . import views # Importez vos vues
+from django.contrib.auth import views as auth_views # Pour les vues d'authentification intégrées
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    #path('books/', views.book_list, name='book-list'),
+    # Vue d'accueil (si vous en avez une)
+    path('', views.home_view, name='home'), # Assurez-vous que 'home_view' existe dans views.py
 
-    path('authors/', views.AuthorListView.as_view(), name='author-list'),
-    path('authors/<int:pk>/', views.AuthorDetailView.as_view(), name='author-detail'),
+    # --- URLs de l'Exercice 1 ---
+    path('books/', views.list_books, name='book-list'), # Vue fonctionnelle
+    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'), # Vue de classe
 
-    path('books/', views.BookListView.as_view(), name='book-list'),
-    path('books/<int:pk>/', views.BookDetailView.as_view(), name='book-detail'),
-
-    path('libraries/', views.LibraryListView.as_view(), name='library-list'),
-    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'),
-
-    path('books/add/', views.BookCreateView.as_view(), name='book-add'),
-
-    # Authentification
+    # --- URLs de l'Exercice 2 (Authentification) ---
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
-    path('register/', views.RegisterView.as_view(), name='register'),
+    path('register/', views.register, name='register'),
 
-
+    # --- URLs de l'Exercice 3 (Contrôle d'accès basé sur les rôles) ---
     path('admin-dashboard/', views.admin_view, name='admin-dashboard'),
     path('librarian-dashboard/', views.librarian_view, name='librarian-dashboard'),
     path('member-dashboard/', views.member_view, name='member-dashboard'),
 
-
-    path('admin-dashboard/', views.admin_view, name='admin-dashboard'),
-    path('librarian-dashboard/', views.librarian_view, name='librarian-dashboard'),
-    path('member-dashboard/', views.member_view, name='member-dashboard'),
-
-
-    path('books/add/', views.BookCreateView.as_view(), name='book-add'), # Déjà là, mais avec permission
-    path('books/<int:pk>/edit/', views.BookUpdateView.as_view(), name='book-edit'), # Nouvelle URL
-    path('books/<int:pk>/delete/', views.BookDeleteView.as_view(), name='book-delete'), # Nouvelle URL
-
-
+    # --- URLs de l'Exercice 4 (Permissions personnalisées) ---
+    path('books/add/', views.BookCreateView.as_view(), name='book-add'),
+    path('books/<int:pk>/edit/', views.BookUpdateView.as_view(), name='book-edit'),
+    path('books/<int:pk>/delete/', views.BookDeleteView.as_view(), name='book-delete'),
 ]

@@ -57,6 +57,7 @@ class Librarian(models.Model):
         return self.name
 
 
+#class user
 class UserProfile(models.Model):
     ROLE_CHOICES = (
         ('Admin', 'Admin'),
@@ -68,5 +69,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+
     
 
