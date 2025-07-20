@@ -4,7 +4,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
-# *** TRÈS IMPORTANT : ASSUREZ-VOUS QUE CETTE LIGNE EST PRÉSENTE ET CORRECTE ***
+# >>> VÉRIFIEZ ABSOLUMENT QUE CETTE LIGNE EST PRÉSENTE EXACTEMENT COMME CELA <<<
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -28,7 +28,8 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Si vous voulez connecter l'utilisateur immédiatement après l'inscription, décommentez la ligne ci-dessous et importez 'login'
+            # Si vous voulez connecter l'utilisateur immédiatement après l'inscription,
+            # décommentez la ligne ci-dessous et importez 'login' depuis django.contrib.auth
             # from django.contrib.auth import login
             # login(request, user)
             return redirect('login') # Redirige vers la page de connexion après l'inscription
@@ -61,7 +62,7 @@ def member_view(request):
 
 # --- Vues pour les permissions personnalisées (Exercice 4) ---
 # Ces vues utilisent PermissionRequiredMixin qui est la bonne pratique pour les vues de classe.
-# L'import du décorateur 'permission_required' est néanmoins requis par le checker.
+# L'import du décorateur 'permission_required' est néanmoins requis par le checker, d'où sa présence ci-dessus.
 class BookCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'relationship_app.can_add_book'
     model = Book
@@ -85,3 +86,5 @@ class BookDeleteView(PermissionRequiredMixin, DeleteView):
 # Vue d'accueil simple
 def home_view(request):
     return render(request, 'relationship_app/home.html')
+
+
