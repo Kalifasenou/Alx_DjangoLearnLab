@@ -9,18 +9,28 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
+class BookAuthor(models.Model):
+    book = models.ForeignKey('Book', on_delete=models.CASCADE)
+    author = models.ForeignKey('Author', on_delete=models.CASCADE)
+    contribution = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('book', 'author')
+
+    def __str__(self):
+        return f"{self.author.name} - {self.book.title}"
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    publication_year = models.IntegerField(null=True, blank=True)
-
+    publication_year = models.IntegerField()
+    authors = models.ManyToManyField('Author', through='BookAuthor')
+    
     class Meta:
         permissions = [
             ("can_add_book", "Can add book"),
             ("can_change_book", "Can change book"),
             ("can_delete_book", "Can delete book"),
         ]
-
+    
     def __str__(self):
         return self.title
 
