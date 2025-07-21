@@ -1,0 +1,18 @@
+{# relationship_app/templates/relationship_app/author_detail.html #}
+<h1>{{ object.name }}</h1>
+{# Si l'auteur avait une bio, ce serait ici, mais le modèle Author n'en a pas #}
+{# <p>{{ object.bio }}</p> #}
+
+<h2>Livres écrits par cet auteur :</h2>
+<ul>
+    {% for book_author in object.bookauthor_set.all %} {# Accéder via le set inversé de BookAuthor #}
+        <li>
+            Livre : <a href="{% url 'book-detail' book_author.book.pk %}">{{ book_author.book.title }}</a>
+            {% if book_author.contribution %}
+                - Contribution : {{ book_author.contribution }}
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>Aucun livre disponible.</li>
+    {% endfor %}
+</ul>

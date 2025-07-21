@@ -1,0 +1,23 @@
+{# relationship_app/templates/relationship_app/book_list.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des livres</title>
+</head>
+<body>
+    <h1>Livres disponibles</h1>
+    <ul>
+        {% for book in books %}
+            {# Correction: Afficher les auteurs #}
+            <li>
+                <a href="{% url 'book-detail' book.pk %}">{{ book.title }}</a>
+                {% if book.authors.all %}
+                    (par: {% for author in book.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                {% else %}
+                    (Auteur inconnu)
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
