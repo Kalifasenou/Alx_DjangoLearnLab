@@ -20,7 +20,8 @@ urlpatterns = [
     path('member-dashboard/', views.member_view, name='member-dashboard'),
 
     # --- URLs de l'Exercice 4 (Permissions personnalisées) ---
-    path('books/add/', views.BookCreateView.as_view(), name='book-add'),
-    path('books/<int:pk>/edit/', views.BookUpdateView.as_view(), name='book-edit'),
-    path('books/<int:pk>/delete/', views.BookDeleteView.as_view(), name='book-delete'),
+    path('add_book/', views.BookCreateView.as_view(), name='book-add'),
+    path('edit_book/<int:pk>/', views.BookUpdateView.as_view(), name='book-edit'),
+    path('delete_book/<int:pk>/', views.BookDeleteView.as_view(), name='book-delete'),
+    
 ]

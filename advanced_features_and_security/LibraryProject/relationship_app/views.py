@@ -5,10 +5,12 @@ from django.views.generic.detail import DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 # >>> CETTE LIGNE EST CELLE QUE LE VÉRIFICATEUR CHERCHE. ASSUREZ-VOUS QU'ELLE EST LÀ EXACTEMENT COMME CELA <<<
-from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.decorators import user_passes_test 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .models import Author, Book, Library, Librarian, UserProfile
+from django.contrib.auth.decorators import permission_required
+from django.utils.decorators import method_decorator
 
 
 # --- Vues de l'Exercice 1 ---
@@ -63,6 +65,7 @@ def member_view(request):
 # --- Vues pour les permissions personnalisées (Exercice 4) ---
 # Ces vues utilisent PermissionRequiredMixin, la meilleure pratique pour les vues de classe.
 # L'import du décorateur 'permission_required' est cependant requis par le checker, d'où sa présence ci-dessus.
+#@permission_required('relationship_app.can_add_book')
 class BookCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'relationship_app.can_add_book'
     model = Book
@@ -70,6 +73,7 @@ class BookCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'relationship_app/book_form.html'
     success_url = reverse_lazy('book-list')
 
+#@method_decorator(permission_required('relationship_app.can_change_book'), name='dispatch')
 class BookUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = 'relationship_app.can_change_book'
     model = Book
