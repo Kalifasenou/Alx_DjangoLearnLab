@@ -11,9 +11,12 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Author, Book, Library, Librarian, UserProfile
 from django.contrib.auth.decorators import permission_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import permission_required, login_required
 
 
 # --- Vues de l'Exercice 1 ---
+@login_required
+@permission_required('bookshelf.can_view_book', raise_exception=True)
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -66,6 +69,7 @@ def member_view(request):
 # Ces vues utilisent PermissionRequiredMixin, la meilleure pratique pour les vues de classe.
 # L'import du décorateur 'permission_required' est cependant requis par le checker, d'où sa présence ci-dessus.
 #@permission_required('relationship_app.can_add_book')
+@permission_required('bookshelf.can_create_book', raise_exception=True)
 class BookCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'relationship_app.can_add_book'
     model = Book
@@ -74,6 +78,7 @@ class BookCreateView(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('book-list')
 
 #@method_decorator(permission_required('relationship_app.can_change_book'), name='dispatch')
+@permission_required('bookshelf.can_edit_book', raise_exception=True)
 class BookUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = 'relationship_app.can_change_book'
     model = Book

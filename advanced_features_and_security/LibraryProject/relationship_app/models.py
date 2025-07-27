@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from LibraryProject.LibraryProject import settings
+from django.conf import settings  
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -56,7 +56,7 @@ class UserProfile(models.Model):
     )
 
     def __str__(self):
-        return f"{self.user.username}'s Profile ({self.role})"
+        return f"Profile of {self.user.email}"
 
 # --- Signaux pour UserProfile (Si vous avez un fichier signals.py, placez-les là-bas) ---
 @receiver(post_save, sender=User)

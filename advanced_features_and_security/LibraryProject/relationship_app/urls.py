@@ -1,6 +1,7 @@
 # relationship_app/urls.py
 from django.urls import path
 from . import views
+from .views import book_list, book_create, book_edit
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
@@ -23,5 +24,8 @@ urlpatterns = [
     path('add_book/', views.BookCreateView.as_view(), name='book-add'),
     path('edit_book/<int:pk>/', views.BookUpdateView.as_view(), name='book-edit'),
     path('delete_book/<int:pk>/', views.BookDeleteView.as_view(), name='book-delete'),
+    path('', book_list, name='book_list'),
+    path('new/', book_create, name='book_create'),
+    path('edit/<int:pk>/', book_edit, name='book_edit'),
     
 ]
