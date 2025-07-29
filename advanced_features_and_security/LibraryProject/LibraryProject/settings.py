@@ -130,3 +130,13 @@ AUTH_USER_MODEL = 'users.CustomUser'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+DEBUG = False  # désactivé en production
+ALLOWED_HOSTS = ['.google.com']  # domaines autorisés
+
+# Sécurité CSRF
+CSRF_COOKIE_SECURE = True  # Utiliser des cookies sécurisés
+SESSION_COOKIE_SECURE = True  # Utiliser des cookies sécurisés pour les sessions
+
+
+SECURE_SSL_REDIRECT = True  # Rediriger toutes les requêtes HTTP vers HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
