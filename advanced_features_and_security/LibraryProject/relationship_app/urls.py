@@ -1,13 +1,13 @@
 # relationship_app/urls.py
 from django.urls import path
 from . import views
-from .views import book_list, book_create, book_edit
+#from .views import book_list, book_create, book_edit
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
 urlpatterns = [
     path('', views.home_view, name='home'),
-    path('books/', views.list_books, name='book-list'),
+    path('books/', views.book_list, name='book-list'),
     path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'),
 
     # --- URLs de l'Exercice 2 (Authentification) ---
@@ -21,11 +21,12 @@ urlpatterns = [
     path('member-dashboard/', views.member_view, name='member-dashboard'),
 
     # --- URLs de l'Exercice 4 (Permissions personnalisées) ---
-    path('add_book/', views.BookCreateView.as_view(), name='book-add'),
-    path('edit_book/<int:pk>/', views.BookUpdateView.as_view(), name='book-edit'),
-    path('delete_book/<int:pk>/', views.BookDeleteView.as_view(), name='book-delete'),
-    path('', book_list, name='book_list'),
-    path('new/', book_create, name='book_create'),
-    path('edit/<int:pk>/', book_edit, name='book_edit'),
+    #path('add_book/', views.BookCreateView.as_view(), name='book-add'),
+    #path('edit_book/<int:pk>/', views.BookUpdateView.as_view(), name='book-edit'),
+   # path('delete_book/<int:pk>/', views.BookDeleteView.as_view(), name='book-delete'),
+
+    path('', views.book_list, name='book_list'),
+    path('new/', views.book_create, name='book_create'),
+    path('edit/<int:pk>/', views.book_edit, name='book_edit'),
     
 ]
