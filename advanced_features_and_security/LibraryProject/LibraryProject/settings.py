@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'relationship_app',
     'users', 
 ]
-
+AUTH_USER_MODEL = 'users.CustomUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -125,13 +125,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.CustomUser'
+#AUTH_USER_MODEL = 'users.CustomUser'
+#AUTH_USER_MODEL = 'users.CustomUser'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEBUG = False  # désactivé en production
-ALLOWED_HOSTS = ['.google.com']  # domaines autorisés
+#ALLOWED_HOSTS = ['.google.com']  # domaines autorisés
 
 # Sécurité CSRF
 CSRF_COOKIE_SECURE = True  # Utiliser des cookies sécurisés
