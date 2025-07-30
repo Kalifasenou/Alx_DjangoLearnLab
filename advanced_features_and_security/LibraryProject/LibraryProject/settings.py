@@ -140,3 +140,7 @@ SESSION_COOKIE_SECURE = True  # Utiliser des cookies sécurisés pour les sessio
 
 SECURE_SSL_REDIRECT = True  # Rediriger toutes les requêtes HTTP vers HTTPS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SECURE_HSTS_SECONDS = 31536000  # active HSTS pour 1 an
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
