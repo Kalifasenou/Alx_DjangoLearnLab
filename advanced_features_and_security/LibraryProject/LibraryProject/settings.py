@@ -23,9 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ph(8_0y+p1h-6)$^$0)6p$il%amz&#o5fai%sv#=n@@_w9+d13'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'example.com',
+    'www.example.com',
+    'api.example.com',
+    '127.0.0.1',
+    'localhost',
+]
 
 
 # Application definition
@@ -125,19 +131,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#AUTH_USER_MODEL = 'users.CustomUser'
-#AUTH_USER_MODEL = 'users.CustomUser'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-DEBUG = False  # désactivé en production
-#ALLOWED_HOSTS = ['.google.com']  # domaines autorisés
 
 # Sécurité CSRF
 CSRF_COOKIE_SECURE = True  # Utiliser des cookies sécurisés
 SESSION_COOKIE_SECURE = True  # Utiliser des cookies sécurisés pour les sessions
-
 
 SECURE_SSL_REDIRECT = True  # Rediriger toutes les requêtes HTTP vers HTTPS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
