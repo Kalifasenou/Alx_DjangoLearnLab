@@ -1,36 +1,32 @@
-from django.db.models.signals import post_save
-from django.contrib.auth.models import User
+# relationship_app/signals.py
+from django.apps import apps
+from django.db.models.signals import post_migrate
 from django.dispatch import receiver
-from .models import Book, UserProfile
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
+@receiver(post_migrate)
+def create_groups_and_permissions(sender, **kwargs):
+    # Ne s’exécute que pour notre app
+    if sender.name != 'relationship_app':
+        return
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
+    Book = apps.get_model('relationship_app', 'Book')
+    ct = ContentType.objects.get_for_model(Book)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.userprofile.save()
+    # Définition des groupes et de leurs codenames de permissions
+    groups_config = {
+        'Editors': ['can_add_book', 'can_change_book'],
+        'Viewers': ['view_book'],
+        'Admins':  ['can_add_book', 'can_change_book', 'can_delete_book', 'view_book'],
+    }
 
-
-
-
-# Création des groupes
-editors, _ = Group.objects.get_or_create(name='Editors')
-viewers, _ = Group.objects.get_or_create(name='Viewers')
-admins,  _ = Group.objects.get_or_create(name='Admins')
-
-# Récupération de permissions (exemple sur le modèle Book)
-content_type = ContentType.objects.get_for_model(Book)
-perm_add = Permission.objects.get(content_type=content_type, codename='can_add_book')
-perm_edit = Permission.objects.get(content_type=content_type, codename='can_change_book')
-perm_delete = Permission.objects.get(content_type=content_type, codename='can_delete_book')
-perm_view = Permission.objects.get(content_type=content_type, codename='view_book')
-
-# Assignation des permissions aux groupes
-editors.permissions.add(perm_add, perm_edit)
-viewers.permissions.add(perm_view)
-admins.permissions.set([perm_add, perm_edit, perm_delete, perm_view])  # tous droits
+    for group_name, codenames in groups_config.items():
+        group, _ = Group.objects.get_or_create(name=group_name)
+        for codename in codenames:
+            try:
+                perm = Permission.objects.get(content_type=ct, codename=codename)
+                group.permissions.add(perm)
+            except Permission.DoesNotExist:
+                # Permission non définie : ignore ou log
+                pass
