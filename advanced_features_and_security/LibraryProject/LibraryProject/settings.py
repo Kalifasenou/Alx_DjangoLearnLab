@@ -47,7 +47,11 @@ INSTALLED_APPS = [
     'relationship_app',
     'users', 
 ]
+
+
+# Modèle utilisateur personnalisé
 AUTH_USER_MODEL = 'users.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -134,13 +138,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Sécurité CSRF
-CSRF_COOKIE_SECURE = True  # Utiliser des cookies sécurisés
-SESSION_COOKIE_SECURE = True  # Utiliser des cookies sécurisés pour les sessions
 
-SECURE_SSL_REDIRECT = True  # Rediriger toutes les requêtes HTTP vers HTTPS
+
+# Cookies sécurisés
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Force HTTPS
+SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SECURE_HSTS_SECONDS = 31536000  # active HSTS pour 1 an
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000            # 1 an
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+# En-têtes de protection supplémentaires
+SECURE_CONTENT_TYPE_NOSNIFF = True        # X-Content-Type-Options: nosniff
+SECURE_BROWSER_XSS_FILTER = True          # X-XSS-Protection
+
+# Empêche le site d’être chargé dans un <frame> (clickjacking)
+X_FRAME_OPTIONS = 'DENY'
