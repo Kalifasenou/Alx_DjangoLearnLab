@@ -1,32 +1,36 @@
-# relationship_app/urls.py
 from django.urls import path
-from . import views
-#from .views import book_list, book_create, book_edit
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
-urlpatterns = [
-    path('', views.home_view, name='home'),
-    path('books/', views.book_list, name='book-list'),
-    path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library-detail'),
+from . import views
+from .views import (
+    LibraryDetailView,
+    BookCreateView,
+    BookUpdateView,
+    BookDeleteView,
+)
 
-    # --- URLs de l'Exercice 2 (Authentification) ---
+urlpatterns = [
+    # Accueil
+    path('', views.home_view, name='home'),
+
+    # Authentification
     path('login/', auth_views.LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='relationship_app/logout.html', next_page=reverse_lazy('login')), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='relationship_app/logout.html',
+                                                 next_page=reverse_lazy('login')), name='logout'),
     path('register/', views.register, name='register'),
 
-    # --- URLs de l'Exercice 3 (Contrôle d'accès basé sur les rôles) ---
+    # Gestion des livres
+    path('books/', views.book_list, name='book-list'),
+    path('books/new/', BookCreateView.as_view(), name='book-add'),
+    path('books/edit/<int:pk>/', BookUpdateView.as_view(), name='book-edit'),
+    path('books/delete/<int:pk>/', BookDeleteView.as_view(), name='book-delete'),
+
+    # Détail d’une bibliothèque
+    path('libraries/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'),
+
+    # Dashboards par rôle
     path('admin-dashboard/', views.admin_view, name='admin-dashboard'),
     path('librarian-dashboard/', views.librarian_view, name='librarian-dashboard'),
     path('member-dashboard/', views.member_view, name='member-dashboard'),
-
-    # --- URLs de l'Exercice 4 (Permissions personnalisées) ---
-    #path('add_book/', views.BookCreateView.as_view(), name='book-add'),
-    #path('edit_book/<int:pk>/', views.BookUpdateView.as_view(), name='book-edit'),
-   # path('delete_book/<int:pk>/', views.BookDeleteView.as_view(), name='book-delete'),
-
-    path('', views.book_list, name='book_list'),
-    path('new/', views.book_create, name='book_create'),
-    path('edit/<int:pk>/', views.book_edit, name='book_edit'),
-    
 ]
