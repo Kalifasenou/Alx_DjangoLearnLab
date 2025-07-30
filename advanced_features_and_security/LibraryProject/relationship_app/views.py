@@ -62,7 +62,7 @@ def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
 # --- Vues pour les permissions personnalisées (Exercice 4) ---
-@permission_required('bookshelf.can_create_book', raise_exception=True)
+@permission_required('bookshelf.can_add_book', raise_exception=True)
 class book_create(PermissionRequiredMixin, CreateView):
     permission_required = 'relationship_app.can_add_book'
     model = Book
@@ -71,14 +71,14 @@ class book_create(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('book-list')
 
 #@method_decorator(permission_required('relationship_app.can_change_book'), name='dispatch')
-@permission_required('bookshelf.can_edit_book', raise_exception=True)
+@permission_required('bookshelf.can_change_book', raise_exception=True)
 class book_edit(PermissionRequiredMixin, UpdateView):
     permission_required = 'relationship_app.can_change_book'
     model = Book
     fields = ['title', 'author', 'publication_year']
     template_name = 'relationship_app/book_form.html'
     success_url = reverse_lazy('book-list')
-
+@permission_required('bookshelf.can_delete_book', raise_exception=True)
 class BookDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = 'relationship_app.can_delete_book'
     model = Book
