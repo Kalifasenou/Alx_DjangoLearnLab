@@ -5,13 +5,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Book, Library, Librarian
 
 
 # --- Liste des livres (permission view) ---
 @login_required
-@permission_required('relationship_app.view_book', raise_exception=True)
+@permission_required('bookshelf.can_view', raise_exception=True)
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -28,20 +28,20 @@ class BookCreateView(PermissionRequiredMixin, CreateView):
     fields = ['title', 'publication_year', 'authors']
     template_name = 'relationship_app/book_form.html'
     success_url = reverse_lazy('book-list')
-    permission_required = 'relationship_app.can_add_book'
+    permission_required = 'bookshelf.can_create'
 
 class BookUpdateView(PermissionRequiredMixin, UpdateView):
     model = Book
     fields = ['title', 'publication_year', 'authors']
     template_name = 'relationship_app/book_form.html'
     success_url = reverse_lazy('book-list')
-    permission_required = 'relationship_app.can_change_book'
+    permission_required = 'bookshelf.can_edit'
 
 class BookDeleteView(PermissionRequiredMixin, DeleteView):
     model = Book
     template_name = 'relationship_app/book_confirm_delete.html'
     success_url = reverse_lazy('book-list')
-    permission_required = 'relationship_app.can_delete_book'
+    permission_required = 'bookshelf.can_delete'
 
 # --- Dashboards par rôle ---
 def is_admin(user):
