@@ -27,7 +27,7 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
 
-# --- Vues de l'Exercice 2 (Authentification) ---
+# --- Authentification ---
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -38,7 +38,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
 
-# --- Fonctions de test de rôle pour l'Exercice 3 ---
+# --- Fonctions de test de rôle  ---
 def is_admin(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
@@ -48,7 +48,7 @@ def is_librarian(user):
 def is_member(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
-# --- Vues basées sur les rôles (Exercice 3) ---
+# --- Vues basées sur les rôles  ---
 @user_passes_test(is_admin, login_url='/login/')
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
@@ -61,29 +61,34 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
-# --- Vues pour les permissions personnalisées (Exercice 4) ---
+# --- Vues pour les permissions personnalisées ---
+
+# --- Création d’un livre (permission add) ---
 @permission_required('bookshelf.can_add_book', raise_exception=True)
-class book_create(PermissionRequiredMixin, CreateView):
+class BookCreateView(PermissionRequiredMixin, CreateView):
     permission_required = 'relationship_app.can_add_book'
     model = Book
     fields = ['title', 'author', 'publication_year']
     template_name = 'relationship_app/book_form.html'
     success_url = reverse_lazy('book-list')
 
-#@method_decorator(permission_required('relationship_app.can_change_book'), name='dispatch')
+# --- Modification d’un livre (permission change) ---
 @permission_required('bookshelf.can_change_book', raise_exception=True)
-class book_edit(PermissionRequiredMixin, UpdateView):
+class BookUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = 'relationship_app.can_change_book'
     model = Book
     fields = ['title', 'author', 'publication_year']
     template_name = 'relationship_app/book_form.html'
     success_url = reverse_lazy('book-list')
+
+# --- Suppression d’un livre (permission delete) ---
 @permission_required('bookshelf.can_delete_book', raise_exception=True)
 class BookDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = 'relationship_app.can_delete_book'
     model = Book
     template_name = 'relationship_app/book_confirm_delete.html'
     success_url = reverse_lazy('book-list')
+
 
 # Vue d'accueil simple
 def home_view(request):
