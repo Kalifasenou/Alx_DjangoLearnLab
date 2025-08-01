@@ -24,4 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
    # path('', views.home, name='home'),
     path('', include('relationship_app.urls')),
+    path('', include('bookshelf.urls')),
+
 ]

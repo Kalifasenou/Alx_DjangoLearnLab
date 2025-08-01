@@ -1,20 +1,9 @@
-<!-- bookshelf/templates/bookshelf/book_list.html -->
 {% extends "base.html" %}
-
 {% block content %}
-<h1>Book List</h1>
-{% if perms.bookshelf.can_create_book %}
-    <a href="{% url 'book_create' %}">Add New Book</a>
-{% endif %}
-
-<ul>
-{% for book in books %}
-    <li>
-        {{ book.title }} by {{ book.author }}
-        {% if perms.bookshelf.can_edit_book %}
-            <a href="{% url 'book_edit' book.pk %}">Edit</a>
-        {% endif %}
-    </li>
-{% endfor %}
-</ul>
+  <h1>Liste des livres</h1>
+  <ul>
+    {% for book in books %}
+      <li>{{ book.title }} - {{ book.author }}</li>
+    {% endfor %}
+  </ul>
 {% endblock %}
