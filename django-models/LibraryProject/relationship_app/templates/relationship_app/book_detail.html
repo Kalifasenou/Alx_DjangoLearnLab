@@ -1,0 +1,28 @@
+{# relationship_app/templates/relationship_app/book_detail.html #}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Détails du Livre: {{ object.title }}</title>
+</head>
+<body>
+    <h1>{{ object.title }}</h1>
+    <p>Année de publication: {{ object.publication_year }}</p>
+    <p>Auteur(s):
+        {% for book_author in object.bookauthor_set.all %}
+            <a href="{% url 'author-detail' book_author.author.pk %}">{{ book_author.author.name }}</a>
+            {% if book_author.contribution %}({{ book_author.contribution }}){% endif %}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Aucun auteur renseigné.
+        {% endfor %}
+    </p>
+    {# Vous pourriez ajouter d'autres détails ici, comme les bibliothèques qui possèdent ce livre #}
+    <h2>Présent dans les bibliothèques:</h2>
+    <ul>
+        {% for library in object.library_set.all %}
+            <li><a href="{% url 'library-detail' library.pk %}">{{ library.name }}</a></li>
+        {% empty %}
+            <li>Non disponible dans une bibliothèque.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

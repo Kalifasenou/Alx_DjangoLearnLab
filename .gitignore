@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+*egg-info/
+.pytest_cache/
+.vscode/ # Pour VS Code, si tu ne veux pas partager tes paramètres IDE
+.DS_Store # Pour macOS
+
+# Django
+db.sqlite3 # Ne jamais commiter la base de données de développement
+/media/
+/static_root/ # Les fichiers statiques collectés
+.env # Fichiers d'environnement avec des secrets
+*.log
+local_settings.py # Si tu sépares les paramètres locaux
