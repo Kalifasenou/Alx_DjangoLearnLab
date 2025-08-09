@@ -2,11 +2,14 @@
 
 from rest_framework import generics, viewsets, filters, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-
-import django_filters.rest_framework
+# api/views.py (en-tête recommandé)
+from rest_framework import generics, viewsets, filters
 from rest_framework.permissions import AllowAny
+import django_filters.rest_framework
+
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
+
 
 
 # 1️⃣ Liste tous les livres (GET /books/)
