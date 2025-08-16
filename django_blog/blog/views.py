@@ -67,3 +67,38 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+    
+
+
+from .forms import CommentForm
+from django.shortcuts import redirect
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['comment_form'] = CommentForm()
+        return ctx
+
+    def post(self, request, *args, **kwargs):
+        # POST = création d'un commentaire sur la page post detail
+        if not request.user.is_authenticated:
+            return redirect('login')
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user
+            comment.save()
+            return redirect(self.object.get_absolute_url())
+        context = self.get_context_data()
+        context['comment_form'] = form
+        return self.render_to_response(context)
+
+
+
+
+
