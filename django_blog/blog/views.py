@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models.py import Post
+from .models import Post, Comment 
+from .forms import CommentForm
+from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -69,10 +71,6 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == post.author
     
 
-
-from .forms import CommentForm
-from django.shortcuts import redirect
-
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
@@ -99,6 +97,23 @@ class PostDetailView(DetailView):
         return self.render_to_response(context)
 
 
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    fields = ['content']
+    template_name = 'blog/comment_form.html'
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    def get_success_url(self):
+        return self.get_object().post.get_absolute_url()
 
 
 
