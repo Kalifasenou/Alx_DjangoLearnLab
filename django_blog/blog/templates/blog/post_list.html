@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Posts {% if tag_filter %} — Tag: {{ tag_filter }}{% endif %}</h1>
+<ul>
+  {% for post in posts %}
+    <li>
+      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+      <small>by {{ post.author }} on {{ post.published_date }}</small>
+      {% if post.tags.all %}
+        <div>
+          Tags:
+          {% for t in post.tags.all %}
+            <a href="{% url 'posts-by-tag' t.slug %}">{{ t }}</a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>No posts yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

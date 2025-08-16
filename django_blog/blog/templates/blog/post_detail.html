@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<article>
+  <h1>{{ object.title }}</h1>
+  <p>By {{ object.author }} — {{ object.published_date }}</p>
+  <div>{{ object.content|linebreaks }}</div>
+  {% if object.tags.all %}
+    <p>Tags:
+      {% for t in object.tags.all %}
+        <a href="{% url 'posts-by-tag' t.slug %}">{{ t }}</a>{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+  {% if user == object.author %}
+    <p><a href="{% url 'post-edit' object.pk %}">Edit</a> | <a href="{% url 'post-delete' object.pk %}">Delete</a></p>
+  {% endif %}
+</article>
+
+<section>
+  <h2>Comments</h2>
+  <ul>
+    {% for c in object.comments.all %}
+      <li>
+        <p>{{ c.author }} — {{ c.created_at }}</p>
+        <div>{{ c.content|linebreaks }}</div>
+        {% if user == c.author %}
+          <a href="{% url 'comment-edit' c.pk %}">edit</a> |
+          <a href="{% url 'comment-delete' c.pk %}">delete</a>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>No comments yet.</li>
+    {% endfor %}
+  </ul>
+
+  {% if user.is_authenticated %}
+    <h3>Add a comment</h3>
+    <form method="post">{% csrf_token %}
+      {{ comment_form.as_p }}
+      <button type="submit">Post comment</button>
+    </form>
+  {% else %}
+    <p><a href="{% url 'login' %}?next={{ request.path }}">Login</a> to comment.</p>
+  {% endif %}
+</section>
+{% endblock %}

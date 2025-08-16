@@ -8,7 +8,16 @@ from taggit.managers import TaggableManager
 # Create your models here.
 
 
+
 User = get_user_model()
+
+try:
+    from taggit.managers import TaggableManager
+    TAGGIT_AVAILABLE = True
+except Exception:
+    TAGGIT_AVAILABLE = False
+
+
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
@@ -39,5 +48,24 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.post}'
+
+
+
+class PostSearchView(ListView):
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        q = self.request.GET.get('q', '')
+        if not q:
+            return models.Post.objects.none()
+        return models.Post.objects.filter(
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+            Q(tags__name__icontains=q)
+        ).distinct()
+
+
+
 
 
