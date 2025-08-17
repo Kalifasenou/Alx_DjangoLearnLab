@@ -10,6 +10,12 @@ from django.db.models import Q
 from .models import Post, Comment
 from .forms import RegisterForm, CommentForm, PostForm
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib import messages
+
+
 # --- Auth views -------------------------------------------------------------
 def register_view(request):
     """Inscription utilisateur."""
@@ -26,7 +32,7 @@ def register_view(request):
 
 @login_required
 def profile_view(request):
-    """Affiche et édite l'email de l'utilisateur (exemple simple)."""
+    """Affiche et édite l'email de l'utilisateur ."""
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         if email:
@@ -163,3 +169,22 @@ class PostSearchView(ListView):
         if hasattr(Post, 'tags'):
             qs = qs | Post.objects.filter(tags__name__icontains=q)
         return qs.distinct()
+
+
+
+
+@login_required
+def profile(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        if email:
+            request.user.email = email
+            request.user.save()
+            messages.success(request, "Profil mis à jour avec succès")
+            return redirect("profile")
+    return render(request, "blog/profile.html", {"user": request.user})
+
+
+
+
+
