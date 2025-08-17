@@ -1,15 +1,15 @@
 from django.db import models
-from django.db import models
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from taggit.managers import TaggableManager
+from django.contrib.auth.models import User
+
 
 
 # Create your models here.
 
 
 
-User = get_user_model()
+User = User()
 
 try:
     from taggit.managers import TaggableManager
