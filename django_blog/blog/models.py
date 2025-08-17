@@ -51,21 +51,6 @@ class Comment(models.Model):
 
 
 
-class PostSearchView(ListView):
-    template_name = 'blog/search_results.html'
-    context_object_name = 'posts'
-
-    def get_queryset(self):
-        q = self.request.GET.get('q', '')
-        if not q:
-            return models.Post.objects.none()
-        return models.Post.objects.filter(
-            Q(title__icontains=q) |
-            Q(content__icontains=q) |
-            Q(tags__name__icontains=q)
-        ).distinct()
-
-
 
 
 
