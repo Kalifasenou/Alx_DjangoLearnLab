@@ -38,4 +38,3 @@ urlpatterns = [
     path('search/', views.PostSearchView.as_view(), name='post-search'),
 ]
 
-Checks for “Ensure URLs are logically structured and intuitive
