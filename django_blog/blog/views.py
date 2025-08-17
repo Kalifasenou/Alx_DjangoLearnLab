@@ -109,7 +109,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == post.author
 
 
-# --- Comment edit/delete -----------------------------------------------------
+# --- Comment create/edit/delete -----------------------------------------------------
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
     fields = ['content']
@@ -131,6 +131,24 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.get_object().post.get_absolute_url()
+
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    """Créer un nouveau commentaire lié à un Post"""
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_form.html"
+
+    def form_valid(self, form):
+        # Récupère le post depuis l'URL
+        post = get_object_or_404(Post, pk=self.kwargs["post_id"])
+        form.instance.post = post
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Après création, on retourne vers le détail du Post
+        return self.object.post.get_absolute_url()
 
 
 # --- Tagging & Search --------------------------------------------------------
