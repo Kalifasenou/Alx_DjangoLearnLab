@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from .models import Comment, Post
 
+
 User = get_user_model()
 
 class RegisterForm(UserCreationForm):
@@ -14,13 +15,21 @@ class RegisterForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
 
+#class CommentForm(forms.ModelForm):
+#    class Meta:
+#        model = Comment
+#        fields = ['content']
+#        widgets = {
+#            'content': forms.Textarea(attrs={'rows': 3}),
+#        }
+
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={'rows': 3}),
-        }
+        fields = ["content"]
+
 
 
 class PostForm(forms.ModelForm):
@@ -28,3 +37,5 @@ class PostForm(forms.ModelForm):
         model = Post
         # Inclure 'tags' si taggit est disponible (cela ne casse rien si absent)
         fields = ['title', 'content'] + (['tags'] if hasattr(Post, 'tags') else [])
+
+
