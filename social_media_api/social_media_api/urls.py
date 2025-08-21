@@ -28,10 +28,10 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")), 
 
     # gestions posts & comments
-    path("api/", include("posts.urls")), 
+    #path("api/", include("posts.urls")), 
     
     # gestions notifications 
-    path("api/", include("notifications.urls")), 
+    #path("api/", include("notifications.urls")), 
 ]
 
 
