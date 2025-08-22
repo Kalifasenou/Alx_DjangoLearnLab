@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from .models import User
+from .models import User, Follow
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -36,3 +36,13 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid credentials")
         attrs["user"] = user
         return attrs
+    
+
+
+
+#generic de suivis
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ("id", "follower", "following", "created_at")
+        read_only_fields = ("follower",)
