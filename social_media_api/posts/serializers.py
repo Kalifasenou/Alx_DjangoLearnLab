@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 #Generic de commentaire
 class CommentSerializer(serializers.ModelSerializer):
@@ -16,3 +16,13 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("id", "user", "content", "image", "created_at", "comments")
+
+
+
+
+#generic de 'j'aime' d'un post 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ("id", "post", "user")
+        read_only_fields = ("user",)

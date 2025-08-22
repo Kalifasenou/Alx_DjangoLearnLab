@@ -1,6 +1,7 @@
+from urllib import response
 from django.shortcuts import render
 from rest_framework import generics, permissions
-from .models import Post, Comment
+from .models import Like, Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 
 
@@ -29,3 +30,16 @@ class CommentCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         post_id = self.kwargs["post_id"]
         serializer.save(user=self.request.user, post_id=post_id)
+
+
+#vu de l'option aimer ou non
+class LikeToggleView(generics.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, post_id):
+        post = Post.objects.get(id=post_id)
+        like, created = Like.objects.get_or_create(post=post, user=request.user)
+        if not created:
+            like.delete()
+            return response({"message": "Unliked"})
+        return response({"message": "Liked"})
