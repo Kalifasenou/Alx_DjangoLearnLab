@@ -1,48 +1,41 @@
 from rest_framework import serializers
-from django.contrib.auth import authenticate
-from .models import User, Follow
+from django.contrib.auth import authenticate, get_user_model
+from rest_framework.authtoken.models import Token
 
-
-class UserSerializer(serializers.ModelSerializer):
-    followers_count = serializers.IntegerField(source="followers.count", read_only=True)
-    following_count = serializers.IntegerField(source="following.count", read_only=True)
-    
-    class Meta:
-        model = User
-        fields = [
-            "id", "username", "email", "first_name", "last_name", "bio", "profile_picture", "followers_count", "following_count",]
-        read_only_fields = ["id", "followers_count", "following_count"]
+User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
-    
+
     class Meta:
         model = User
         fields = ["username", "email", "password"]
-        
-        def create(self, validated_data):
-            user = User.objects.create_user(**validated_data)
-            return user
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        Token.objects.create(user=user)   # 🔑 token auto
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
-    
+
     def validate(self, attrs):
-        user = authenticate(username=attrs.get("username"), password=attrs.get("password"))
+        user = authenticate(
+            username=attrs.get("username"),
+            password=attrs.get("password")
+        )
         if not user:
             raise serializers.ValidationError("Invalid credentials")
+        token, _ = Token.objects.get_or_create(user=user)  # 🔑 renvoie le token
         attrs["user"] = user
+        attrs["token"] = token.key
         return attrs
-    
 
 
-
-#generic de suivis
-class FollowSerializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Follow
-        fields = ("id", "follower", "following", "created_at")
-        read_only_fields = ("follower",)
+        model = User
+        fields = ["username", "email", "bio", "profile_picture", "followers"]

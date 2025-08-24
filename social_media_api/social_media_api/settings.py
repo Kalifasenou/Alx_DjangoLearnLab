@@ -86,7 +86,13 @@ DATABASES = {
 }
 
 #connexion à l'apps
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.User" 
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

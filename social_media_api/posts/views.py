@@ -43,3 +43,16 @@ class LikeToggleView(generics.APIView):
             like.delete()
             return response({"message": "Unliked"})
         return response({"message": "Liked"})
+
+
+#vue de feed
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        following_ids = user.following.values_list("following_id", flat=True)
+        return Post.objects.filter(user_id__in=following_ids).order_by("-created_at")
+
+

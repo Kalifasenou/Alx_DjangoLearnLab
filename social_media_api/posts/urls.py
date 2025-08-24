@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostListCreateView, PostDetailView, CommentCreateView, LikeToggleView
+from .views import PostListCreateView, PostDetailView, CommentCreateView, LikeToggleView, FeedView
 
 
 
@@ -19,3 +19,10 @@ urlpatterns = [
 urlpatterns += [
     path("posts/<int:post_id>/like/", LikeToggleView.as_view(), name="like-toggle"),
 ]
+
+
+#route pour le feed
+urlpatterns += [
+    path("feed/", FeedView.as_view(), name="feed"),
+]
+
