@@ -16,7 +16,7 @@ class Post(models.Model):
         return f"Post by {self.author.username} at {self.created_at}"
 
 
-class Comment(models.Model):   # ✅ attendu par le checker
+class Comment(models.Model):   
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
