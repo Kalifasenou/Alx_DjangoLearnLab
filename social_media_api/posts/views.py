@@ -1,29 +1,28 @@
-from rest_framework import generics, permissions
-from .models import Post
-from .serializers import PostSerializer
+from rest_framework import viewsets, permissions
+from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer
 
 
-class PostListCreateView(generics.ListCreateAPIView):
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.author == request.user
+
+
+class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by("-created_at")
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
 
-class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all().order_by("-created_at")
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
-    def perform_update(self, serializer):
-        # ✅ éviter que quelqu’un d’autre modifie ton post
-        if self.get_object().author != self.request.user:
-            raise PermissionError("You cannot edit someone else's post.")
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        if instance.author != self.request.user:
-            raise PermissionError("You cannot delete someone else's post.")
-        instance.delete()
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
