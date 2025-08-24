@@ -26,7 +26,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     
     # /inscription, /login, /profile
-    path("accounts/", include("accounts.urls")), 
+    path("api/accounts/", include("accounts.urls")),
 
     # gestions posts & comments
     path("api/", include("posts.urls")), 
