@@ -51,51 +51,48 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
 
 #vues de suivi
-
+#List all users 
 class UserListView(generics.ListAPIView):
-    """
-    Liste de tous les users.
-    """
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [permissions.AllowAny]
 
 
-class FollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+#suivre user
+class FollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProfileSerializer
 
     def post(self, request, user_id, *args, **kwargs):
-        target = get_object_or_404(CustomUser, pk=user_id)
+        target = get_object_or_404(User, pk=user_id)
         if target == request.user:
             return Response({"detail": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
-        # add follow relation (idempotent)
         request.user.following.add(target)
         return Response({"message": f"You are now following {target.username}"}, status=status.HTTP_200_OK)
 
-
-class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+#ne plus suivre user
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProfileSerializer
 
     def post(self, request, user_id, *args, **kwargs):
-        target = get_object_or_404(CustomUser, pk=user_id)
+        target = get_object_or_404(User, pk=user_id)
         request.user.following.remove(target)
         return Response({"message": f"You unfollowed {target.username}"}, status=status.HTTP_200_OK)
 
-#tu es suivi
+#liste des users suivis
 class FollowingListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        # users the current user is following
         return self.request.user.following.all()
 
-#tu suit
+#list des users qui nous suit
 class FollowersListView(generics.ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        # users who follow the current user
         return self.request.user.followers.all()
 
