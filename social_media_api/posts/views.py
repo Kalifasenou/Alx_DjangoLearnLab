@@ -28,11 +28,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+
+#les posts des utilisateurs que user connecté suit
 class FeedView(generics.ListAPIView):
-    """
-    les posts des utilisateurs que user connecté suit.
-    GET /api/feed/
-    """
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -41,3 +39,5 @@ class FeedView(generics.ListAPIView):
         # IDs des users suivis
         following_ids = user.following.values_list("id", flat=True)
         return Post.objects.filter(author_id__in=following_ids).order_by("-created_at")
+    
+
