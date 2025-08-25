@@ -9,8 +9,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.author == request.user
+   
 
-
+# ViewSets pour posts/comments (si déjà présents, on les conserve)
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by("-created_at")
     serializer_class = PostSerializer
@@ -29,15 +30,13 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-#les posts des utilisateurs que user connecté suit
+# les posts des utilisateurs que l'utilisateur courant suit.
 class FeedView(generics.ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        # IDs des users suivis
-        following_ids = user.following.values_list("id", flat=True)
-        return Post.objects.filter(author_id__in=following_ids).order_by("-created_at")
-    
+        following_users = user.following.all()
 
+        return Post.objects.filter(author__in=following_users).order_by("-created_at")
