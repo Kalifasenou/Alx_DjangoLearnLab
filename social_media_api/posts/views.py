@@ -7,6 +7,8 @@ from rest_framework import mixins
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
+from rest_framework import generics as drf_generics
+
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -52,12 +54,12 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk, *args, **kwargs):
-        post = get_object_or_404(Post, pk=pk)
-        like, created = Like.objects.get_or_create(post=post, user=request.user)
+        post = drf_generics.get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
         if not created:
             return Response({"detail": "Already liked"}, status=status.HTTP_200_OK)
 
-        # create a notification for the post author (if liker != author)
         if post.author != request.user:
             from notifications.models import Notification
             content_type = ContentType.objects.get_for_model(post)
@@ -71,12 +73,16 @@ class LikePostView(generics.GenericAPIView):
 
         return Response({"detail": "Post liked"}, status=status.HTTP_201_CREATED)
 
-# ne pas aimer
+
 class UnlikePostView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk, *args, **kwargs):
-        post = get_object_or_404(Post, pk=pk)
-        deleted, _ = Like.objects.filter(post=post, user=request.user).delete()
-        # Optionally create a notification for unlike (commonly not required)
+        # again use generics.get_object_or_404 for consistency
+        post = drf_generics.get_object_or_404(Post, pk=pk)
+
+        # supprimer le like si existant
+        deleted_count, _ = Like.objects.filter(user=request.user, post=post).delete()
+        if deleted_count == 0:
+            return Response({"detail": "Not liked"}, status=status.HTTP_200_OK)
         return Response({"detail": "Post unliked"}, status=status.HTTP_200_OK)
